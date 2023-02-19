@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SchoolManagementApp.MVC.Data;
 
 namespace SchoolManagementApp.MVC.Controllers
 {
+    [Authorize]
     public class LecturersController : Controller
     {
         private readonly SchoolManagementDbContext _context;
@@ -16,32 +13,6 @@ namespace SchoolManagementApp.MVC.Controllers
         public LecturersController(SchoolManagementDbContext context)
         {
             _context = context;
-        }
-
-        // GET: Lecturers
-        public async Task<IActionResult> Index()
-        {
-              return _context.Lecturers != null ? 
-                          View(await _context.Lecturers.ToListAsync()) :
-                          Problem("Entity set 'SchoolManagementDbContext.Lecturers'  is null.");
-        }
-
-        // GET: Lecturers/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Lecturers == null)
-            {
-                return NotFound();
-            }
-
-            var lecturer = await _context.Lecturers
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (lecturer == null)
-            {
-                return NotFound();
-            }
-
-            return View(lecturer);
         }
 
         // GET: Lecturers/Create
@@ -63,6 +34,61 @@ namespace SchoolManagementApp.MVC.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            return View(lecturer);
+        }
+
+        // GET: Lecturers/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null || _context.Lecturers == null)
+            {
+                return NotFound();
+            }
+
+            var lecturer = await _context.Lecturers
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (lecturer == null)
+            {
+                return NotFound();
+            }
+
+            return View(lecturer);
+        }
+
+        // POST: Lecturers/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            if (_context.Lecturers == null)
+            {
+                return Problem("Entity set 'SchoolManagementDbContext.Lecturers'  is null.");
+            }
+            var lecturer = await _context.Lecturers.FindAsync(id);
+            if (lecturer != null)
+            {
+                _context.Lecturers.Remove(lecturer);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Lecturers/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || _context.Lecturers == null)
+            {
+                return NotFound();
+            }
+
+            var lecturer = await _context.Lecturers
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (lecturer == null)
+            {
+                return NotFound();
+            }
+
             return View(lecturer);
         }
 
@@ -117,46 +143,17 @@ namespace SchoolManagementApp.MVC.Controllers
             return View(lecturer);
         }
 
-        // GET: Lecturers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: Lecturers
+        public async Task<IActionResult> Index()
         {
-            if (id == null || _context.Lecturers == null)
-            {
-                return NotFound();
-            }
-
-            var lecturer = await _context.Lecturers
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (lecturer == null)
-            {
-                return NotFound();
-            }
-
-            return View(lecturer);
-        }
-
-        // POST: Lecturers/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Lecturers == null)
-            {
-                return Problem("Entity set 'SchoolManagementDbContext.Lecturers'  is null.");
-            }
-            var lecturer = await _context.Lecturers.FindAsync(id);
-            if (lecturer != null)
-            {
-                _context.Lecturers.Remove(lecturer);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return _context.Lecturers != null ?
+                        View(await _context.Lecturers.ToListAsync()) :
+                        Problem("Entity set 'SchoolManagementDbContext.Lecturers'  is null.");
         }
 
         private bool LecturerExists(int id)
         {
-          return (_context.Lecturers?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Lecturers?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
