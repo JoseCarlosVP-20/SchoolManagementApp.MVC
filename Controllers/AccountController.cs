@@ -8,7 +8,6 @@ using SchoolManagementApp.MVC.Models;
 
 namespace SchoolManagementApp.MVC.Controllers
 {
-    [Authorize]
     public class AccountController : Controller
     {
         public async Task Login(string returnUrl = "/")
