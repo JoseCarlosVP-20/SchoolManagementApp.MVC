@@ -46,8 +46,8 @@
                                 asp-action="Index">Students</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" asp-area="" asp-controller="Classes"
-                                asp-action="Index">Class Management</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Classes" asp-action="Index">Class
+                                    Management</a>
                             </li>
                         }
                     </ul>
@@ -75,6 +75,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    @await Component.InvokeAsync("Notyf")
 </body>
 
 </html>
